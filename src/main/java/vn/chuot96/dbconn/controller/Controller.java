@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import vn.chuot96.dbconn.dto.NosqlRequest;
 import vn.chuot96.dbconn.dto.SqlRequest;
+import vn.chuot96.dbconn.service.MongodbService;
 import vn.chuot96.dbconn.service.SqlService;
 
 @RestController
@@ -14,6 +16,8 @@ import vn.chuot96.dbconn.service.SqlService;
 @RequestMapping("/db")
 public class Controller {
     private final SqlService sqlService;
+
+    private final MongodbService mongodbService;
 
     @PostMapping("/sql/mysql")
     public ResponseEntity<?> mysql(@RequestBody SqlRequest request) {
@@ -31,5 +35,29 @@ public class Controller {
     }
 
     // --> more SQL type here
+
+    @PostMapping("/mongodb/insert")
+    public ResponseEntity<?> mongodbInsert(@RequestBody NosqlRequest request) {
+        return mongodbService.insert(request);
+    }
+
+    @PostMapping("/mongodb/find")
+    public ResponseEntity<?> mongodbFind(@RequestBody NosqlRequest request) {
+        return mongodbService.find(request);
+    }
+
+    @PostMapping("/mongodb/update")
+    public ResponseEntity<?> mongodbUpdate(@RequestBody NosqlRequest request) {
+        return mongodbService.update(request);
+    }
+
+    @PostMapping("/mongodb/delete")
+    public ResponseEntity<?> mongodbDelete(@RequestBody NosqlRequest request) {
+        return mongodbService.delete(request);
+    }
+
+    // --> More operation here
+
+    // --> More NoSQL type here
 
 }
