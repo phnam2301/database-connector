@@ -16,13 +16,15 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class HeaderValueFilter extends OncePerRequestFilter {
     private final HeaderValueAllowed headerValueAllowed;
 
+    private  final ExternalFileReader externalFileReader;
+
     @Override
     protected void doFilterInternal(
             HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
             throws ServletException, IOException {
         String path = request.getRequestURI();
-        if (path.startsWith("/issuer/")) {
-            String token = request.getHeader("X-Internal-Token");
+        if (path.startsWith("/issue/")) {
+            String token = request.getHeader(externalFileReader.string("DbConnHeaderName"));
             if (token == null || !headerValueAllowed.isAllowed(token)) {
                 response.sendError(HttpStatus.UNAUTHORIZED.value(), "Invalid or missing internal token");
                 return;
